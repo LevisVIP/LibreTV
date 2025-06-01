@@ -1,0 +1,23 @@
+# .github/workflows/AutoSyncFork.yml
+name: Auto Sync Fork
+
+on:
+  schedule:
+    - cron: "0 */6 * * *" # 每6小时执行一次，可以根据需要调整cron表达式
+  workflow_dispatch: # 允许手动触发
+ 
+jobs:
+  sync:
+    name: Git Sync
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: master # 使用你的默认分支名，例如master或main
+      - name: Sync fork with upstream repository
+        uses: GuillaumeFalourd/github-sync@v2 # 使用一个现成的GitHub Actions动作来同步fork
+        with:
+          source_repo_url: 'https://github.com/LibreSpark/LibreTV.git' # 原始仓库的URL
+          source_branch: 'main' # 原始仓库的分支名，例如main或master
+          destination_branch: 'master' # 你fork后的分支名，例如master或main
+          github_token: ${{ secrets.GITHUB_TOKEN }} # 使用默认的GitHub token
